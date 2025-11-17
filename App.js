@@ -6,6 +6,7 @@ server.use(express.json())
 server.use(cors())
 
 server.use("/aptitute",require("./Routes/Userroutes.js"))
+server.use("/questions",require("./Routes/Questionroutes.js"))
 server.listen(8089,()=>{
     console.log("server run at: http://localhost:8089");
 })

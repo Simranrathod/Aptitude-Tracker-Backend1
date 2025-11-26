@@ -116,7 +116,7 @@ const Adminsignin = async (req, res) => {
 
         const Token = jwt.sign(
             { userid: existingUser._id, email: existingUser.email },
-            "our secret key",
+            process.env.JWT_SECRET,
             { expiresIn: "30d" }
         );
 

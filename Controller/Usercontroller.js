@@ -7,7 +7,7 @@ const Signup = async (req, res) => {
         const { name, email, password } = req.body;
         const userexist = await User.findOne({ email });
         if (userexist) {
-            return res.status(4000).json({ message: "already register" })
+            return res.status(400).json({ message: "already register" })
         }
 
         const hassPassword = await bcrypt.hash(password, 10)
@@ -47,4 +47,15 @@ const Signin = async (req, res) => {
     }
 }
 
-module.exports = { Signup,Signin }
+const GetAllUsers=async(req,res)=>{
+    try{
+        const users= await User.find()
+           res.status(200).json(users);
+    }
+     catch(err){
+     res.status(500).json({ error: err.message });
+  }
+}
+
+
+module.exports = { Signup,Signin,GetAllUsers }

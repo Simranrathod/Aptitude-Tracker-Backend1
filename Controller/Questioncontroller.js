@@ -71,14 +71,14 @@ const getQuestionsByLevel = async (req, res) => {
 };
 
 
-// const addQuestion = async (req, res) => {
-//   try {
-//     const newQ = new Question(req.body);
-//     await newQ.save();
-//     res.status(201).json(newQ);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
+const alldata=async(req,res)=>{
+  try{
+     const allquestion=await  Question.find();
+       res.status(200).json(allquestion);
+  }
+  catch(err){
+     res.status(500).json({ error: err.message });
+  }
+}
 
-module.exports = { addQuestion, updateQuestion, deleteQuestion, getQuestionsByLevel };
+module.exports = { addQuestion, updateQuestion, deleteQuestion, getQuestionsByLevel,alldata };

@@ -13,7 +13,19 @@ const Signup = async (req, res) => {
         const hassPassword = await bcrypt.hash(password, 10)
         const newUser = new User({ name, email, password: hassPassword })
         await newUser.save()
-        res.status(200).json(newUser)
+        const token = jwt.sign({ userid: newUser._id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: "30d" })
+        // res.status(200).json(newUser)
+        res.status(200).json({
+            message: "Signup successful",
+            user: {
+                _id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                createdAt: newUser.createdAt,
+                totalTests: newUser.totalTests
+            },
+            token: token
+        });
     }
     catch (err) {
         res.status(500).json({ error: err.message });
@@ -36,26 +48,52 @@ const Signin = async (req, res) => {
 
 
         const Token = jwt.sign({ userid: existingUser._id, email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: "30d" })
+        // res.status(200).json({
+        //     message: "Login successful",
+        //     user: existingUser,
+        //     token: Token
+        // });
         res.status(200).json({
             message: "Login successful",
-            user: existingUser,
+            user: {
+                _id: existingUser._id,
+                name: existingUser.name,
+                email: existingUser.email,
+                createdAt: existingUser.createdAt || new Date(),
+                totalTests: existingUser.totalTests || 0,
+
+            },
             token: Token
         });
+
     }
     catch (err) {
         res.status(500).json({ error: err.message });
     }
 }
 
-const GetAllUsers=async(req,res)=>{
-    try{
-        const users= await User.find()
-           res.status(200).json(users);
+const GetAllUsers = async (req, res) => {
+    try {
+        const users = await User.find()
+        res.status(200).json(users);
     }
-     catch(err){
-     res.status(500).json({ error: err.message });
-  }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 }
+const GetUserById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
 
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
-module.exports = { Signup,Signin,GetAllUsers }
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+module.exports = { Signup, Signin, GetAllUsers, GetUserById }

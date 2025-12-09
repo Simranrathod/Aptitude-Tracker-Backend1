@@ -1,5 +1,5 @@
 const Score = require("../Models/Score");
-
+const {User}=require("../Models/Usermodel")
 const Scoreboard = async (req, res) => {
   try {
     const { userId,name, score, level, total } = req.body;
@@ -36,4 +36,20 @@ res.status(200).json(scores1);
   }
 }
 
-module.exports = { Scoreboard, allscore,myscore };
+
+const increaseTestCount = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $inc: { totalTests: 1 } },
+      { new: true }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+module.exports = { Scoreboard, allscore,myscore,increaseTestCount};

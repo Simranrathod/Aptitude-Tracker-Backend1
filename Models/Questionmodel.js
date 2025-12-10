@@ -6,6 +6,7 @@ const questionSchema = mongoose.Schema({
     options: [String],
     correctAnswer: String,
     codeSnippet: String,
+     expectedOutput: String,  
 })
 const Question=mongoose.model("QuestionData",questionSchema);
 module.exports={Question}

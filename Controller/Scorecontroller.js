@@ -37,19 +37,19 @@ res.status(200).json(scores1);
 }
 
 
-const increaseTestCount = async (req, res) => {
-  try {
-    const { userId } = req.params;
+// const increaseTestCount = async (req, res) => {
+//   try {
+//     const { userId } = req.params;
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $inc: { totalTests: 1 } },
-      { new: true }
-    );
+//     const updatedUser = await User.findByIdAndUpdate(
+//       userId,
+//       { $inc: { totalTests: 1 } },
+//       { new: true }
+//     );
 
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-module.exports = { Scoreboard, allscore,myscore,increaseTestCount};
+//     res.status(200).json(updatedUser);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+module.exports = { Scoreboard, allscore,myscore};

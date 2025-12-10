@@ -55,11 +55,18 @@ const getQuestionsByLevel = async (req, res) => {
       const coding = await Question.find({ level: "medium", type: "code" }).limit(10);
       questions = [...mcqs, ...coding];
     } 
-    else if (level === "hard") {
-      const mcqs = await Question.find({ level: "hard", type: "mcq" }).limit(20);
-      const writing = await Question.find({ level: "hard", type: "writing" }).limit(20);
-      questions = [...mcqs, ...writing];
-    } 
+  //   else if (level === "hard") {
+  //     const mcqs = await Question.find({ level: "hard", type: "mcq" }).limit(20);
+  //     const writing = await Question.find({ level: "hard", type: "writing" }).limit(20);
+  //     questions = [...mcqs, ...writing,...coding];
+  // //       const hardQuestions = await Question.find({ level: "hard" }).limit(20);
+  // // questions = [...hardQuestions];
+  //   } 
+  else if (level === "hard") {
+  const coding = await Question.find({ level: "hard", type: "code" }).limit(30);
+  questions = coding;
+}
+
     else {
       return res.status(400).json({ message: "Invalid level" });
     }

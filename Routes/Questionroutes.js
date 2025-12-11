@@ -4,7 +4,7 @@ const router = express.Router();
 const { addQuestion, updateQuestion, deleteQuestion, getQuestionsByLevel,alldata} = require("../Controller/Questioncontroller");
 
 
-router.get("/all", alldata);   
+router.get("/all",verifyAdmin, alldata);   
 router.get("/:level", getQuestionsByLevel);
 router.delete("/delete/:id",verifyAdmin, deleteQuestion);
 router.put("/update/:id",verifyAdmin, updateQuestion);

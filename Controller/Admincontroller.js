@@ -11,9 +11,9 @@
 //     const userExist = await Adminuser.findOne({ email });
 //     if (userExist) {
 //       return res.status(400).json({ message: "Email already registered" });
-     
+
 //     }
-    
+
 //        const User = new Adminuser({ name, email, password: hashpassword,role:email==="admin1234@gmail.com"?"admin":"user" })
 //     await User.save();
 //     res.status(201).json({ message: "User Registered Successfully", User});
@@ -27,7 +27,7 @@
 //   try {
 //     const { email, password } = req.body;
 
-   
+
 //     const existingUser = await Adminuser.findOne({ email });
 //     if (!existingUser) {
 //       return res.status(404).json({ message: "User not found" });
@@ -43,7 +43,7 @@
 //   { expiresIn: "1d" }
 // );
 
-    
+
 //     res.status(200).json({
 //       message: "Login successful",
 //       existingUser,loginmodel,token
@@ -77,11 +77,15 @@
 const { Adminuser } = require("../Models/Adminmodel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config()
 
 // SIGNUP
 const Adminsignup = async (req, res) => {
     try {
         const { email, password } = req.body;
+        if (email !== process.env.ADMIN_EMAIL) {
+            return res.status(403).json({ message: "you are not allowed to register as admin" })
+        }
 
         const userexist = await Adminuser.findOne({ email });
         if (userexist) {
@@ -89,12 +93,13 @@ const Adminsignup = async (req, res) => {
         }
 
         const hashPassword = await bcrypt.hash(password, 10);
-        const newUser = new Adminuser({ email, password: hashPassword });
+        const newUser = new Adminuser({ email, password: hashPassword, role: "admin" });
 
         await newUser.save();
-        res.status(200).json(newUser);
+        res.status(200).json({ message: "Admin Registered Successfully!", newUser });
 
-    } catch (err) {
+    }
+    catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
@@ -103,32 +108,21 @@ const Adminsignup = async (req, res) => {
 const Adminsignin = async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        const existingUser = await Adminuser.findOne({ email });
-        if (!existingUser) {
-            return res.status(404).json({ message: "User not found" });
+        if (email !== process.env.ADMIN_EMAIL) {
+            return res.status(403).json({ message: "Access denied (Not Admin)" });
+        }
+        if (password !== process.env.ADMIN_PASSWORD) {
+            return res.status(401).json({ message: "Incorrect Admin Password" });
         }
 
-        const isMatch = await bcrypt.compare(password, existingUser.password);
-        if (!isMatch) {
-            return res.status(404).json({ message: "password incorrect" });
-        }
+        const token = jwt.sign({ role: "admin", email }, process.env.JWT_SECRET, { expiresIn: "30d" })
+        res.status(200).json({ message: "admin login successful", role: "admin", token })
 
-        const Token = jwt.sign(
-            { userid: existingUser._id, email: existingUser.email },
-            process.env.JWT_SECRET,
-            { expiresIn: "30d" }
-        );
-
-        res.status(200).json({
-            message: "Login successful",
-            user: existingUser,
-            token: Token
-        });
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
     }
+        
+ catch (err) {
+    res.status(500).json({ error: err.message });
+}
 };
 
 module.exports = { Adminsignin, Adminsignup };

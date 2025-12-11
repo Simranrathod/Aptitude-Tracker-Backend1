@@ -5,7 +5,7 @@ const {Signup,Signin,GetAllUsers,GetUserById}= require("../Controller/Usercontro
 
 router.post("/signup",Signup)
 router.post("/signin",Signin)
-router.get("/all-users",GetAllUsers)
+// router.get("/all-users",GetAllUsers)
 router.get("/user/:id", GetUserById);
 
 module.exports=router

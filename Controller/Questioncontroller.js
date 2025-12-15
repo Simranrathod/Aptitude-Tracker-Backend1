@@ -1,6 +1,6 @@
 const { Question } = require("../Models/Questionmodel")
 
-// ✅ Admin: Add new question
+// Admin: Add new question
 const addQuestion = async (req, res) => {
   try {
     const newQ = new Question(req.body);
@@ -10,7 +10,7 @@ const addQuestion = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-// ✅ Admin: Update question
+// Admin: Update question
 const updateQuestion = async (req, res) => {
   try {
     const { id } = req.params;
@@ -22,7 +22,7 @@ const updateQuestion = async (req, res) => {
   }
 };
 
-// ✅ Admin: Delete question
+// Admin: Delete question
 const deleteQuestion = async (req, res) => {
     try{
         const {id}=req.params;
@@ -55,13 +55,7 @@ const getQuestionsByLevel = async (req, res) => {
       const coding = await Question.find({ level: "medium", type: "code" }).limit(10);
       questions = [...mcqs, ...coding];
     } 
-  //   else if (level === "hard") {
-  //     const mcqs = await Question.find({ level: "hard", type: "mcq" }).limit(20);
-  //     const writing = await Question.find({ level: "hard", type: "writing" }).limit(20);
-  //     questions = [...mcqs, ...writing,...coding];
-  // //       const hardQuestions = await Question.find({ level: "hard" }).limit(20);
-  // // questions = [...hardQuestions];
-  //   } 
+
   else if (level === "hard") {
   const coding = await Question.find({ level: "hard", type: "code" }).limit(30);
   questions = coding;
